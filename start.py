@@ -1,7 +1,7 @@
 name = str(input('Enter File Name: '))
 srtstr = str(input('Enter SRT Text: '))
 srtstr = srtstr.split()
-speechspeed = float(input("Enter Speech Speed (default = 0.05): "))  # 0.05 = 50мс
+speechspeed = float(input("Enter Speech Speed (default = 0.065): "))  # 0.065 = 65мс
 
 # Новая переменная для количества слов в строке
 words_per_line = int(input("Words in line: ")) 
@@ -31,6 +31,11 @@ line_words = ""
 for words in srtstr:
     wordslen = len(words)
     secondtime += wordslen * speechspeed
+
+    # Проверка разницы между firsttime и secondtime
+    if (secondtime - firsttime) * 1000 < 150:  # Умножаем на 1000, чтобы сравнивать в миллисекундах
+        secondtime = firsttime + 0.15  # Увеличиваем до минимальной разницы (150 мс)
+
     strsecondtime = timecalculation(secondtime)
 
     line_words += f"{words} "
@@ -41,6 +46,7 @@ for words in srtstr:
         completesrt += f"{count}\n{strfirsttime} --> {strsecondtime}\n{line_words.strip()}\n\n"
         count += 1
         strfirsttime = strsecondtime
+        firsttime = secondtime  # Обновляем firsttime для следующей строки
         current_words = 0
         line_words = ""
 
